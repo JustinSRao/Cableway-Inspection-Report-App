@@ -1,4 +1,3 @@
-import os
 import tkinter as tk # Used for building the GUI
 from tkinter import ttk, filedialog, messagebox
 from tkinterdnd2 import DND_FILES, TkinterDnD # Drag and drop
@@ -45,8 +44,14 @@ class CablewayInspectionApp:
 
         # The space for the inspection data that will be inputted by the user
         self.fields = {}
+        self.fields_cable = {}
         # All the inspection data necessary for the report
-        form_fields = ["Station Name", "Station Number", "Inspector Name", "Reviewer Name", "Date Inspected", "Weather Conditions", "Temperature (°C)", "Cable Condition", "Safety Equipment Status", "Recommendations"]
+        form_fields = ["Station Name", "Station Number", "Inspector Name", "Reviewer Name", "Date Inspected", "Weather Conditions", "Temperature (°C)", "Span (m)", "Sag (m)", "Design Load (kg)", "Recommendations"]
+        form_fields_cable = ["Diameter (in)", "Angle from Vertical (deg)", "Cable Type", "Core Type", "Broken Wires", "Pinched Wires", "Broken Strands", "Frays", "Rust", "Distortion", "Chainage Marks", "Comments"]
+
+        # Add a note that says that the following data inputted is for general.
+        general_label = ttk.Label(self.scrollable_frame, text="General Data:", font=("Arial", 10, "bold"))
+        general_label.pack(pady=(10, 5))
 
         # For loop for iterating through all the inspection parameters in form_fields
         for field in form_fields:
@@ -57,13 +62,29 @@ class CablewayInspectionApp:
             label = ttk.Label(frame, text=field)
             label.pack(side=tk.LEFT)
             # Textbox for "Recommendations" is larger than the other fields
-            if field == "Recommendations":
-                entry = tk.Text(frame, height=4, width=40)
-            else:
-                entry = ttk.Entry(frame, width=40)
+            entry = ttk.Entry(frame, width=40)
             # Adds the input field to the frame and stores it in self.fields
             entry.pack(side=tk.LEFT, padx=5)
             self.fields[field] = entry
+
+        # Add a note that says that the following data inputted is for cable.
+        cable_label = ttk.Label(self.scrollable_frame, text="Cable Data:", font=("Arial", 10, "bold"))
+        cable_label.pack(pady=(10, 5))
+
+        # For loop for iterating through all the inspection parameters in form_fields_cable
+        for field in form_fields_cable:
+            # Creates a horizontal frame for the name and an input box
+            frame = ttk.Frame(self.scrollable_frame)
+            frame.pack(fill=tk.X, padx=5, pady=5)
+            # Creates a label for the data
+            label = ttk.Label(frame, text=field)
+            label.pack(side=tk.LEFT)
+            # Textbox for "Recommendations" is larger than the other fields
+            entry = ttk.Entry(frame, width=40)
+            # Adds the input field to the frame and stores it in self.fields
+            entry.pack(side=tk.LEFT, padx=5)
+            self.fields_cable[field] = entry
+
         # Positions the canvas and the scrollbar
         canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -124,8 +145,17 @@ class CablewayInspectionApp:
             else:
                 data[field] = entry.get().strip()
 
+        for field, entry in self.fields_cable.items():
+            if isinstance(entry, tk.Text):
+                data[field] = entry.get("1.0", tk.END).strip()
+            else:
+                data[field] = entry.get().strip()
+
+
         # Returns the collected data as a dictionary
         return data
+
+
 
     # Saves and creates the pdf
     def generate_report(self):
@@ -147,26 +177,72 @@ class CablewayInspectionApp:
         pdf.ln(5)
 
         # Includes a section where the station name and number are displayed
-        pdf.set_font("helvetica", "", 12)
+        pdf.set_font("helvetica", "", 10)
         pdf.cell(0, 8, f"Station Name: {data.get('Station Name', '')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
         pdf.cell(0, 8, f"Station Number: {data.get('Station Number', '')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
-        pdf.cell(0, 8, f"Date: {date_str}", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
-        pdf.ln(10)
+        pdf.cell(0, 8, f"Inspection Date: {data.get('Date Inspected', '')}", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
+        pdf.ln(5)
 
-        excluded_fields = ["Inspector Name", "Reviewer Name", "Date Inspected"]
+        # Table title
+        pdf.set_font("helvetica", "B", 14)
+        pdf.cell(0, 10, "General Information:", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
 
-        # Reduce font size for the data
+        excluded_fields = ["Station Name", "Station Number", "Inspector Name", "Reviewer Name", "Date Inspected", "Diameter (in)", "Angle from Vertical (deg)", "Cable Type", "Core Type", "Broken Wires", "Pinched Wires", "Broken Strands", "Frays", "Rust", "Distortion", "Chainage Marks", "Comments"]
+
+        # Set font size for the table content
         pdf.set_font("helvetica", "", 12)
-        # Iterate through all the form fields and prints the inputted data
+
+        # Set column widths
+        col_width = 80
+        row_height = 10
+
+        # Iterate through all the form fields and print the inputted data in a table format
         for field, value in data.items():
             if field not in excluded_fields:
                 # Title is bold
                 pdf.set_font("helvetica", "B", 12)
-                pdf.cell(60, 10, f"{field}:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                pdf.cell(col_width, row_height, f"{field}:", border=1)
+
                 # Data is not bold
                 pdf.set_font("helvetica", "", 12)
-                pdf.multi_cell(0, 8, value)
-                pdf.ln(2)
+
+                # Use cell for other fields
+                pdf.cell(col_width, row_height, value, border=1)
+
+                pdf.ln(row_height)
+
+
+        pdf.ln(10)
+
+        # Table title
+        pdf.set_font("helvetica", "B", 14)
+        pdf.cell(0, 10, "Cable Information:", new_x=XPos.LMARGIN, new_y=YPos.NEXT, align="C")
+
+
+        excluded_fields2 = ["Station Name", "Station Number", "Inspector Name", "Reviewer Name", "Date Inspected", "Weather Conditions", "Temperature (°C)", "Span (m)", "Sag (m)", "Design Load (kg)", "Recommendations"]
+
+        # Set font size for the table content
+        pdf.set_font("helvetica", "", 10)
+
+        # Set column widths
+        col_width = 80
+        row_height = 10
+
+        # Iterate through all the form fields and print the inputted data in a table format
+        for field, value in data.items():
+            if field not in excluded_fields2:
+                # Title is bold
+                pdf.set_font("helvetica", "B", 12)
+                pdf.cell(col_width, row_height, f"{field}:", border=1)
+
+                # Data is not bold
+                pdf.set_font("helvetica", "", 12)
+
+                # Use cell for other fields
+                pdf.cell(col_width, row_height, value, border=1)
+
+                pdf.ln(row_height)
+
 
         # If there are images, create a new page for them
         if self.images:
@@ -192,10 +268,10 @@ class CablewayInspectionApp:
                 except:
                     pass
 
-            pdf.add_page()
 
+        pdf.add_page()
 
-        excluded_fields2 = ["Station Name", "Station Number", "Weather Conditions", "Temperature (°C)", "Cable Condition", "Safety Equipment Status", "Recommendations"]
+        excluded_fields2 = ["Station Name", "Station Number", "Weather Conditions", "Temperature (°C)", "Span (m)", "Sag (m)", "Design Load (kg)", "Recommendations", "Diameter (in)", "Angle from Vertical (deg)", "Cable Type", "Core Type", "Broken Wires", "Pinched Wires", "Broken Strands", "Frays", "Rust", "Distortion", "Chainage Marks", "Comments", "Date Inspected"]
 
         # Reduce font size for the data
         pdf.set_font("helvetica", "", 12)
@@ -206,14 +282,15 @@ class CablewayInspectionApp:
                 pdf.set_font("helvetica", "B", 12)
                 pdf.cell(60, 10, f"{field}:", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
                 # Data is not bold
-                pdf.set_font("helvetica", "", 12)
+                pdf.set_font("helvetica", "B", 12)
                 pdf.multi_cell(0, 8, value)
                 pdf.ln(2)
 
+        pdf.set_font("helvetica", "B", 12)
+        pdf.cell(60, 10, f"Review Date: {date_str}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
 
-
-        # Saves the finalized pdf as the generated filename
+# Saves the finalized pdf as the generated filename
         pdf.output(filename)
         # Message that confirms the generated pdf
         messagebox.showinfo("Success", f"Report saved as {filename}")
