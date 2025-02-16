@@ -1,56 +1,64 @@
-# Cableway Inspection Report Generator
+# Cableway Inspection Report App
 
 ## Overview
-The Cableway Inspection Report Generator is a Python-based GUI application designed to help users generate detailed inspection reports for cableway stations. Users can input inspection data, upload inspection images, and generate a comprehensive PDF report.
+The **Cableway Inspection Report App** is a Python-based application that provides a graphical user interface (GUI) for generating cableway inspection reports. The app allows users to input inspection details, upload images, and generate a formatted PDF report.
 
 ## Features
-- User-friendly GUI built with Tkinter.
-- Scrollable form for entering inspection data.
-- Drag and drop interface for uploading images.
-- Manual file upload option for images.
-- Automated PDF report generation with input data and images.
-- Customizable report filename based on station name, number, and date of inspection.
+- **GUI built with Tkinter**: An interface used for entering inspection data.
+- **Drag and Drop Image Upload**: Supports dropping image files directly into the application.
+- **Manual Image Selection**: Browse and select images from your file system.
+- **Dynamic Form Input**: Users can enter details about general inspection and cable-specific data.
+- **Automated PDF Generation**: Creates a structured, professional report including the entered data and images.
+- **Scrollable Input Form**: Easily navigate through all required fields.
 
 ## Installation
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/cableway-inspection-report-generator.git
-   cd cableway-inspection-report-generator
-   ```
 
-2. **Create and activate a virtual environment (optional but recommended):**
-   ```bash
-   python -m venv env
-   source env/bin/activate   # On Windows, use `env\Scripts\activate`
-   ```
+### Prerequisites
+Ensure you have Python installed on your system. The required dependencies can be installed using the provided `requirements.txt` file.
 
-3. **Install the required dependencies:**
-   ```bash
+### Steps
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/JustinSRao/Cableway-Inspection-Report-App.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd Cableway-Inspection-Report-App
+   ```
+3. Create and activate a virtual environment (optional but recommended):
+   ```sh
+   python -m venv venv
+   source venv/bin/activate  # On macOS/Linux
+   venv\Scripts\activate     # On Windows
+   ```
+4. Install dependencies:
+   ```sh
    pip install -r requirements.txt
    ```
 
 ## Usage
-1. **Run the application:**
-   ```bash
-   python cableway_inspection.py
-   ```
 
-2. **Fill out the inspection form:**
-    - Enter details such as Station Name, Station Number, Inspector Name, and more.
-    - Scroll through the form to complete all fields.
+Run the application using the following command:
+```sh
+python cableway_inspection.py
+```
 
-3. **Upload images:**
-    - Drag and drop images into the designated area.
-    - Or click "Browse" to select images manually.
+### Steps to Generate a Report
+1. Open the application.
+2. Fill in the **General Data** and **Cable Data** sections.
+3. Upload images by dragging and dropping or clicking **Browse**.
+4. Click **Generate Report** to create and save a PDF file.
 
-4. **Generate the PDF report:**
-    - Click the "Generate Report" button.
-    - The report will be saved as a PDF file with a name based on the station name, number, and date.
 
 ## Dependencies
-- Python 3.12.9
-- tkinter
-- tkinterdnd2
-- Pillow
-- fpdf
-- datetime
+This project uses the following Python libraries:
+- `tkinter` – GUI development
+- `tkinterdnd2` – Drag and drop functionality
+- `PIL` (Pillow) – Image processing
+- `fpdf` – PDF generation
+- `datetime` – Timestamp management
+
+Install all dependencies using:
+```sh
+pip install -r requirements.txt
+```
