@@ -48,7 +48,7 @@ The Cableway Inspection Report Generator is a Python-based GUI application desig
     - The report will be saved as a PDF file with a name based on the station name, number, and date.
 
 ## Dependencies
-- Python 3.x
+- Python 3.12.9
 - tkinter
 - tkinterdnd2
 - Pillow
