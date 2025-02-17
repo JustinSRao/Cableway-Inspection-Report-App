@@ -14,7 +14,7 @@ The **Cableway Inspection Report App** is a Python-based application that provid
 ## Installation
 
 ### Prerequisites
-Ensure you have Python installed on your system. The required dependencies can be installed using the provided `requirements.txt` file.
+Ensure you have Python installed on your system.
 
 ### Steps
 1. Clone the repository:
@@ -25,13 +25,7 @@ Ensure you have Python installed on your system. The required dependencies can b
    ```sh
    cd Cableway-Inspection-Report-App
    ```
-3. Create and activate a virtual environment (optional but recommended):
-   ```sh
-   python -m venv venv
-   source venv/bin/activate  # On macOS/Linux
-   venv\Scripts\activate     # On Windows
-   ```
-4. Install dependencies:
+3. Install dependencies:
    ```sh
    pip install -r requirements.txt
    ```
@@ -49,6 +43,7 @@ python cableway_inspection.py
 3. Upload images by dragging and dropping or clicking **Browse**.
 4. Click **Generate Report** to create and save a PDF file.
 
+The PDF will be saved to the Cableway-Inspection-Report-App directory you are currently in, and can be opened from the File Explorer on you computer.
 
 ## Dependencies
 This project uses the following Python libraries:
