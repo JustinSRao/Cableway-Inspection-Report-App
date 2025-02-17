@@ -17,15 +17,18 @@ The **Cableway Inspection Report App** is a Python-based application that provid
 Ensure you have Python installed on your system.
 
 ### Steps
-1. Clone the repository:
+
+1. Open your computer terminal
+
+2. Clone the repository:
    ```sh
    git clone https://github.com/JustinSRao/Cableway-Inspection-Report-App.git
    ```
-2. Navigate to the project directory:
+3. Navigate to the project directory:
    ```sh
    cd Cableway-Inspection-Report-App
    ```
-3. Install dependencies:
+4. Install dependencies:
    ```sh
    pip install -r requirements.txt
    ```
